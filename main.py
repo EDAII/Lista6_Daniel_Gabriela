@@ -18,13 +18,13 @@ LIGHTBLUE = (60, 170, 255)
 DARKBLUE = (0, 101, 178)
 BEIGE = (178, 168, 152)
 
-WIDTH = 600
-HEIGHT = 600
+WIDTH = 800
+HEIGHT = 800
 
 SCREEN_SIZE = (WIDTH, HEIGHT)
-DRAW_BRUSH_SIZE = 10
-DFS_BRUSH_SIZE = 10
-BFS_BRUSH_SIZE = 10
+DRAW_BRUSH_SIZE = 15
+DFS_BRUSH_SIZE = 15
+BFS_BRUSH_SIZE = 15
 
 OPTION_WIDTH = 20
 OPTION_HEIGTH = 20
@@ -95,6 +95,7 @@ class Game():
                         print("Running BFS")
                         self.option_draw = False
                         self.bfs(self.mouse_position, self.background.get_at(self.mouse_position))
+                        print("End BFS")
 
                     elif(event.button == LEFT_CLICK):
                         # fill using dfs algorithm
@@ -102,6 +103,7 @@ class Game():
                         print("Running DFS")
                         self.option_draw = False
                         self.dfs(self.mouse_position, self.background.get_at(self.mouse_position))
+                        print("End DFS")
 
                 # Drawing dot when mousebuttondown
                 if self.option_draw:
@@ -126,7 +128,7 @@ class Game():
             s = queue.pop()
             x, y = s
 
-             # right_neighbor 
+            # right_neighbor 
             neighbors.append((x + BFS_BRUSH_SIZE + 1, y))
             # left_neighbor 
             neighbors.append((x - BFS_BRUSH_SIZE - 1, y))
@@ -141,26 +143,55 @@ class Game():
                     queue.append(neighbor)
                     self.drawCircleInPosition(neighbor, BFS_BRUSH_SIZE)
 
+    # def dfs(self, s, color):
+    #     if self.getColor(s) == color:
+
+    #         self.drawCircleInPosition(s, DFS_BRUSH_SIZE)
+
+    #         x, y = s            
+    #         neighbors = []
+
+    #         # right_neighbor 
+    #         neighbors.append((x + DFS_BRUSH_SIZE + 1, y))
+    #         # left_neighbor 
+    #         neighbors.append((x - DFS_BRUSH_SIZE - 1, y))
+    #         # top_neighbor
+    #         neighbors.append((x, y - DFS_BRUSH_SIZE - 1))
+    #         # bottom_neighbor 
+    #         neighbors.append((x, y + DFS_BRUSH_SIZE + 1))
+
+    #         for neighbor in neighbors:
+    #             if self.verifyMargin(neighbor) and self.getColor(neighbor) == color:
+    #                 self.dfs(neighbor, color)
+
     def dfs(self, s, color):
+
         if self.getColor(s) == color:
+            visited = []
+            stack = []
+            stack.append(s)
 
-            self.drawCircleInPosition(s, DFS_BRUSH_SIZE)
+            while (len(stack)):
+                node = stack[-1]
+                stack.pop()
 
-            x, y = s            
-            neighbors = []
+                x, y = node
+                if node not in visited:
+                    visited.append(node)
 
-            # right_neighbor 
-            neighbors.append((x + DFS_BRUSH_SIZE + 1, y))
-            # left_neighbor 
-            neighbors.append((x - DFS_BRUSH_SIZE - 1, y))
-            # top_neighbor
-            neighbors.append((x, y - DFS_BRUSH_SIZE - 1))
-            # bottom_neighbor 
-            neighbors.append((x, y + DFS_BRUSH_SIZE + 1))
+                neighbors = []
 
-            for neighbor in neighbors:
-                if self.verifyMargin(neighbor) and self.getColor(neighbor) == color:
-                    self.dfs(neighbor, color)
+                neighbors.append((x + DFS_BRUSH_SIZE + 1, y))
+                neighbors.append((x - DFS_BRUSH_SIZE - 1, y))
+                neighbors.append((x, y - DFS_BRUSH_SIZE - 1))
+                neighbors.append((x, y + DFS_BRUSH_SIZE + 1))
+
+                self.drawCircleInPosition(node, DFS_BRUSH_SIZE)
+
+                for neighbor in neighbors:
+                    if self.verifyMargin(neighbor) and self.getColor(neighbor) == color and neighbor not in visited:
+                        stack.append(neighbor)
+
 
     def drawCircleInPosition(self, s, brush_size):
         pygame.draw.circle(self.background, 
