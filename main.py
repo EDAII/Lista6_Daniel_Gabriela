@@ -22,9 +22,8 @@ WIDTH = 800
 HEIGHT = 800
 
 SCREEN_SIZE = (WIDTH, HEIGHT)
-DRAW_BRUSH_SIZE = 15
-DFS_BRUSH_SIZE = 15
-BFS_BRUSH_SIZE = 15
+DRAW_BRUSH_SIZE = 12
+SEARCH_BRUSH_SIZE = DRAW_BRUSH_SIZE // 2
 
 OPTION_WIDTH = 20
 OPTION_HEIGTH = 20
@@ -118,7 +117,7 @@ class Game():
         queue = []
         neighbors = []  
 
-        self.drawCircleInPosition(s, BFS_BRUSH_SIZE)
+        self.drawCircleInPosition(s, SEARCH_BRUSH_SIZE)
         queue.append(s)
 
         while queue:
@@ -128,46 +127,24 @@ class Game():
             s = queue.pop()
             x, y = s
 
-            # right_neighbor 
-            neighbors.append((x + BFS_BRUSH_SIZE + 1, y))
-            # left_neighbor 
-            neighbors.append((x - BFS_BRUSH_SIZE - 1, y))
-            # top_neighbor
-            neighbors.append((x, y - BFS_BRUSH_SIZE - 1))
-            # bottom_neighbor 
-            neighbors.append((x, y + BFS_BRUSH_SIZE + 1))
+            neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y + SEARCH_BRUSH_SIZE + 1))
+            neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y + SEARCH_BRUSH_SIZE + 1))
+            neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y - SEARCH_BRUSH_SIZE - 1))
+            neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y - SEARCH_BRUSH_SIZE - 1))
+            neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y))
+            neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y))
+            neighbors.append((x, y - SEARCH_BRUSH_SIZE - 1))
+            neighbors.append((x, y + SEARCH_BRUSH_SIZE + 1))
 
             for neighbor in neighbors:
 
                 if self.verifyMargin(neighbor) and self.getColor(neighbor) == color:
                     queue.append(neighbor)
-                    self.drawCircleInPosition(neighbor, BFS_BRUSH_SIZE)
-
-    # def dfs(self, s, color):
-    #     if self.getColor(s) == color:
-
-    #         self.drawCircleInPosition(s, DFS_BRUSH_SIZE)
-
-    #         x, y = s            
-    #         neighbors = []
-
-    #         # right_neighbor 
-    #         neighbors.append((x + DFS_BRUSH_SIZE + 1, y))
-    #         # left_neighbor 
-    #         neighbors.append((x - DFS_BRUSH_SIZE - 1, y))
-    #         # top_neighbor
-    #         neighbors.append((x, y - DFS_BRUSH_SIZE - 1))
-    #         # bottom_neighbor 
-    #         neighbors.append((x, y + DFS_BRUSH_SIZE + 1))
-
-    #         for neighbor in neighbors:
-    #             if self.verifyMargin(neighbor) and self.getColor(neighbor) == color:
-    #                 self.dfs(neighbor, color)
+                    self.drawCircleInPosition(neighbor, SEARCH_BRUSH_SIZE)
 
     def dfs(self, s, color):
 
         if self.getColor(s) == color:
-            visited = []
             stack = []
             stack.append(s)
 
@@ -176,31 +153,32 @@ class Game():
                 stack.pop()
 
                 x, y = node
-                if node not in visited:
-                    visited.append(node)
 
                 neighbors = []
 
-                neighbors.append((x + DFS_BRUSH_SIZE + 1, y))
-                neighbors.append((x - DFS_BRUSH_SIZE - 1, y))
-                neighbors.append((x, y - DFS_BRUSH_SIZE - 1))
-                neighbors.append((x, y + DFS_BRUSH_SIZE + 1))
+                neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y + SEARCH_BRUSH_SIZE + 1))
+                neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y + SEARCH_BRUSH_SIZE + 1))
+                neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y - SEARCH_BRUSH_SIZE - 1))
+                neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y - SEARCH_BRUSH_SIZE - 1))
+                neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y))
+                neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y))
+                neighbors.append((x, y - SEARCH_BRUSH_SIZE - 1))
+                neighbors.append((x, y + SEARCH_BRUSH_SIZE + 1))
 
-                self.drawCircleInPosition(node, DFS_BRUSH_SIZE)
+                self.drawCircleInPosition(node, SEARCH_BRUSH_SIZE)
 
                 for neighbor in neighbors:
-                    if self.verifyMargin(neighbor) and self.getColor(neighbor) == color and neighbor not in visited:
+                    if self.verifyMargin(neighbor) and self.getColor(neighbor) == color and neighbor:
                         stack.append(neighbor)
 
 
     def drawCircleInPosition(self, s, brush_size):
-        pygame.draw.circle(self.background, 
-            self.brush_color, 
-            s, 
-            brush_size)
+        x, y = s
+        pygame.draw.circle(self.background, self.brush_color, (x, y), brush_size)
 
     def getColor(self, position):
-        return self.background.get_at(position)
+        x, y = position
+        return self.background.get_at((x, y))
 
     def verifyMargin(self, s):
         x, y = s
