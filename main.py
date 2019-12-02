@@ -25,6 +25,8 @@ SCREEN_SIZE = (WIDTH, HEIGHT)
 DRAW_BRUSH_SIZE = 12
 SEARCH_BRUSH_SIZE = DRAW_BRUSH_SIZE // 2
 
+BLOCK_QTT = 50
+
 OPTION_WIDTH = 20
 OPTION_HEIGTH = 20
 
@@ -47,13 +49,14 @@ class Game():
 
         self.option_draw = False
         self.brush_color = GREEN
-    
+        self.brush_size = WIDTH // BLOCK_QTT
+
     def run(self):
         exit = False
 
         while not exit:
             self.mouse_position = pygame.mouse.get_pos()
-            
+
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit = True
@@ -66,7 +69,7 @@ class Game():
 
                     if event.key == K_TAB:
                         self.option_draw = not self.option_draw
-                    
+
                     # Change pencil color
                     elif event.key == K_r:
                         self.brush_color = RED
@@ -85,9 +88,9 @@ class Game():
                     # eraser
                     elif event.key == K_e:
                         self.brush_color = BLACK
-                    
 
-                elif event.type == MOUSEBUTTONDOWN:                
+
+                elif event.type == MOUSEBUTTONDOWN:
 
                     if(event.button == RIGHT_CLICK):
                         # fill using bfs algorithm
@@ -107,7 +110,7 @@ class Game():
                 # Drawing dot when mousebuttondown
                 if self.option_draw:
                     self.drawCircleInPosition(self.mouse_position, DRAW_BRUSH_SIZE)
-        
+
             pygame.display.update()
 
         pygame.quit()
@@ -115,7 +118,7 @@ class Game():
 
     def bfs(self, s, color):
         queue = []
-        neighbors = []  
+        neighbors = []
 
         self.drawCircleInPosition(s, SEARCH_BRUSH_SIZE)
         queue.append(s)
@@ -148,22 +151,21 @@ class Game():
             stack = []
             stack.append(s)
 
-            while (len(stack)):
-                node = stack[-1]
-                stack.pop()
+            while (stack):
+                node = stack.pop()
 
                 x, y = node
 
                 neighbors = []
 
-                neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y + SEARCH_BRUSH_SIZE + 1))
-                neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y + SEARCH_BRUSH_SIZE + 1))
-                neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y - SEARCH_BRUSH_SIZE - 1))
-                neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y - SEARCH_BRUSH_SIZE - 1))
-                neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y))
-                neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y))
-                neighbors.append((x, y - SEARCH_BRUSH_SIZE - 1))
-                neighbors.append((x, y + SEARCH_BRUSH_SIZE + 1))
+                # neighbors.append((x + self.brush_size + 1, y + self.brush_size + 1))
+                # neighbors.append((x - self.brush_size, y + self.brush_size + 1))
+                # neighbors.append((x + self.brush_size + 1, y - self.brush_size))
+                # neighbors.append((x - self.brush_size, y - self.brush_size))
+                neighbors.append((x + self.brush_size + 1, y))
+                neighbors.append((x - self.brush_size, y))
+                neighbors.append((x, y - self.brush_size))
+                neighbors.append((x, y + self.brush_size + 1))
 
                 self.drawCircleInPosition(node, SEARCH_BRUSH_SIZE)
 
@@ -171,10 +173,14 @@ class Game():
                     if self.verifyMargin(neighbor) and self.getColor(neighbor) == color and neighbor:
                         stack.append(neighbor)
 
-
     def drawCircleInPosition(self, s, brush_size):
         x, y = s
-        pygame.draw.circle(self.background, self.brush_color, (x, y), brush_size)
+
+        position_x = self.brush_size * (x // self.brush_size)
+        position_y = self.brush_size * (y // self.brush_size)
+
+        rect = pygame.Rect(position_x, position_y, self.brush_size, self.brush_size)
+        pygame.draw.rect(self.background, self.brush_color, rect)
 
     def getColor(self, position):
         x, y = position
@@ -183,6 +189,7 @@ class Game():
     def verifyMargin(self, s):
         x, y = s
         return x >= 0 and x < WIDTH and y >= 0 and y < HEIGHT
+
 
 def main():
     mygame = Game()
