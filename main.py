@@ -130,17 +130,16 @@ class Game():
             s = queue.pop()
             x, y = s
 
-            neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y + SEARCH_BRUSH_SIZE + 1))
-            neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y + SEARCH_BRUSH_SIZE + 1))
-            neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y - SEARCH_BRUSH_SIZE - 1))
-            neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y - SEARCH_BRUSH_SIZE - 1))
-            neighbors.append((x + SEARCH_BRUSH_SIZE + 1, y))
-            neighbors.append((x - SEARCH_BRUSH_SIZE - 1, y))
-            neighbors.append((x, y - SEARCH_BRUSH_SIZE - 1))
-            neighbors.append((x, y + SEARCH_BRUSH_SIZE + 1))
+            # neighbors.append((x + self.brush_size + 1, y + self.brush_size + 1))
+            # neighbors.append((x - self.brush_size - 1, y + self.brush_size + 1))
+            # neighbors.append((x + self.brush_size + 1, y - self.brush_size - 1))
+            # neighbors.append((x - self.brush_size - 1, y - self.brush_size - 1))
+            neighbors.append((x + self.brush_size, y))
+            neighbors.append((x - self.brush_size, y))
+            neighbors.append((x, y - self.brush_size))
+            neighbors.append((x, y + self.brush_size))
 
             for neighbor in neighbors:
-
                 if self.verifyMargin(neighbor) and self.getColor(neighbor) == color:
                     queue.append(neighbor)
                     self.drawCircleInPosition(neighbor, SEARCH_BRUSH_SIZE)
@@ -153,7 +152,6 @@ class Game():
 
             while (stack):
                 node = stack.pop()
-
                 x, y = node
 
                 neighbors = []
@@ -162,10 +160,10 @@ class Game():
                 # neighbors.append((x - self.brush_size, y + self.brush_size + 1))
                 # neighbors.append((x + self.brush_size + 1, y - self.brush_size))
                 # neighbors.append((x - self.brush_size, y - self.brush_size))
-                neighbors.append((x + self.brush_size + 1, y))
+                neighbors.append((x + self.brush_size, y))
                 neighbors.append((x - self.brush_size, y))
                 neighbors.append((x, y - self.brush_size))
-                neighbors.append((x, y + self.brush_size + 1))
+                neighbors.append((x, y + self.brush_size))
 
                 self.drawCircleInPosition(node, SEARCH_BRUSH_SIZE)
 
