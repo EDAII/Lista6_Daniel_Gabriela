@@ -19,16 +19,10 @@ DARKBLUE = (0, 101, 178)
 BEIGE = (178, 168, 152)
 
 WIDTH = 800
-HEIGHT = 800
-
+HEIGHT = WIDTH
 SCREEN_SIZE = (WIDTH, HEIGHT)
-DRAW_BRUSH_SIZE = 12
-SEARCH_BRUSH_SIZE = DRAW_BRUSH_SIZE // 2
 
-BLOCK_QTT = 50
-
-OPTION_WIDTH = 20
-OPTION_HEIGTH = 20
+RECT_QTT = 50
 
 LEFT_CLICK = 1
 SCROLL_CLICK = 4
@@ -49,7 +43,7 @@ class Game():
 
         self.option_draw = False
         self.brush_color = GREEN
-        self.brush_size = WIDTH // BLOCK_QTT
+        self.brush_size = WIDTH // RECT_QTT
 
     def run(self):
         exit = False
@@ -109,7 +103,7 @@ class Game():
 
                 # Drawing dot when mousebuttondown
                 if self.option_draw:
-                    self.drawCircleInPosition(self.mouse_position, DRAW_BRUSH_SIZE)
+                    self.drawCircleInPosition(self.mouse_position)
 
             pygame.display.update()
 
@@ -120,7 +114,7 @@ class Game():
         queue = []
         neighbors = []
 
-        self.drawCircleInPosition(s, SEARCH_BRUSH_SIZE)
+        self.drawCircleInPosition(s)
         queue.append(s)
 
         while queue:
@@ -142,20 +136,20 @@ class Game():
             for neighbor in neighbors:
                 if self.verifyMargin(neighbor) and self.getColor(neighbor) == color:
                     queue.append(neighbor)
-                    self.drawCircleInPosition(neighbor, SEARCH_BRUSH_SIZE)
+                    self.drawCircleInPosition(neighbor)
 
     def dfs(self, s, color):
 
         if self.getColor(s) == color:
             stack = []
+            neighbors = []
             stack.append(s)
 
             while (stack):
                 node = stack.pop()
                 x, y = node
 
-                neighbors = []
-
+                neighbors.clear()
                 # neighbors.append((x + self.brush_size + 1, y + self.brush_size + 1))
                 # neighbors.append((x - self.brush_size, y + self.brush_size + 1))
                 # neighbors.append((x + self.brush_size + 1, y - self.brush_size))
@@ -165,13 +159,13 @@ class Game():
                 neighbors.append((x, y - self.brush_size))
                 neighbors.append((x, y + self.brush_size))
 
-                self.drawCircleInPosition(node, SEARCH_BRUSH_SIZE)
+                self.drawCircleInPosition(node)
 
                 for neighbor in neighbors:
                     if self.verifyMargin(neighbor) and self.getColor(neighbor) == color and neighbor:
                         stack.append(neighbor)
 
-    def drawCircleInPosition(self, s, brush_size):
+    def drawCircleInPosition(self, s):
         x, y = s
 
         position_x = self.brush_size * (x // self.brush_size)
